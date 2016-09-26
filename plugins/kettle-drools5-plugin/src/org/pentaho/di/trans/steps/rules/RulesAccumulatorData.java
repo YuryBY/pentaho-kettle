@@ -31,7 +31,6 @@ import java.util.Map;
 
 import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseFactory;
-import org.drools.ObjectFilter;
 import org.drools.builder.KnowledgeBuilder;
 import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
@@ -152,7 +151,7 @@ public class RulesAccumulatorData extends BaseStepData implements StepDataInterf
 
       session.fireAllRules();
 
-      Collection<Object> oList = session.getObjects( new ObjectFilter() {
+      Collection<Object> oList = session.getObjects( new org.drools.runtime.ObjectFilter() {
         @Override
         public boolean accept( Object o ) {
           if ( o instanceof Row && !( (Row) o ).isExternalSource() ) {
