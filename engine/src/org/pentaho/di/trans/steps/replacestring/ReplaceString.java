@@ -125,9 +125,9 @@ public class ReplaceString extends BaseStep implements StepInterface {
 
       RowMetaInterface currentRowMeta =
           ( numFieldsAlreadyBeenTransformed.contains( data.inStreamNrs[i] ) ) ? data.outputRowMeta : getInputRowMeta();
-      String value =
-          replaceString( currentRowMeta.getString( rowData, data.inStreamNrs[i] ), data.patterns[i],
-          getResolvedReplaceByString( i, row ) );
+      String originalString = currentRowMeta.getString( rowData, data.inStreamNrs[i] );
+      String resolvedString = Utils.resolvePassword( getParentVariableSpace(), originalString );
+      String value = replaceString( resolvedString, data.patterns[i], getResolvedReplaceByString( i, row ) );
 
       if ( Utils.isEmpty( data.outStreamNrs[i] ) ) {
         // update field value
@@ -199,7 +199,7 @@ public class ReplaceString extends BaseStep implements StepInterface {
           }
         } else {
           data.replaceFieldIndex[i] = -1;
-          data.replaceByString[i] = environmentSubstitute( meta.getReplaceByString()[i] );
+          data.replaceByString[i] = Utils.resolvePassword( getParentVariableSpace(), meta.getReplaceByString()[i] );
         }
         data.setEmptyString[i] = meta.isSetEmptyString()[i];
 
