@@ -90,7 +90,7 @@ public class WebServiceManager implements ServiceManager {
     registerWsSpecification( IRoleAuthorizationPolicyRoleBindingDaoWebService.class, "roleBindingDao" ); //$NON-NLS-1$
     registerWsSpecification( IAuthorizationPolicyWebService.class, "authorizationPolicy" ); //$NON-NLS-1$
 
-    registerRestSpecification( PentahoDiPlugin.PurRepositoryPluginApiRevision.class, "purRepositoryPluginApiRevision" ); //$NON-NLS-1$
+    registerRestSpecification( PentahoDiPlugin.PurRepositoryPluginApiRevision.class, "purRepositoryPlugi nApiRevision" ); //$NON-NLS-1$
 
     this.serviceNameMap = Collections.unmodifiableMap( tempServiceNameMap );
     tempServiceNameMap = null;
