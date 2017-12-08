@@ -22,21 +22,10 @@
 
 package org.pentaho.di.job;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
 import org.apache.commons.lang.StringUtils;
 import org.pentaho.di.ExecutionConfiguration;
 import org.pentaho.di.cluster.SlaveServer;
 import org.pentaho.di.core.Const;
-import org.pentaho.di.core.util.Utils;
 import org.pentaho.di.core.Result;
 import org.pentaho.di.core.encryption.Encr;
 import org.pentaho.di.core.exception.KettleException;
@@ -45,6 +34,7 @@ import org.pentaho.di.core.logging.LogChannelInterface;
 import org.pentaho.di.core.logging.LogLevel;
 import org.pentaho.di.core.plugins.PluginRegistry;
 import org.pentaho.di.core.plugins.RepositoryPluginType;
+import org.pentaho.di.core.util.Utils;
 import org.pentaho.di.core.variables.VariableSpace;
 import org.pentaho.di.core.variables.Variables;
 import org.pentaho.di.core.xml.XMLHandler;
@@ -56,6 +46,16 @@ import org.pentaho.di.repository.RepositoryMeta;
 import org.pentaho.di.trans.TransMeta;
 import org.pentaho.metastore.api.IMetaStore;
 import org.w3c.dom.Node;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 public class JobExecutionConfiguration implements ExecutionConfiguration {
   public static final String XML_TAG = "job_execution_configuration";
@@ -412,8 +412,7 @@ public class JobExecutionConfiguration implements ExecutionConfiguration {
       // File base repositories doesn't have user info
       if ( repository.getUserInfo() != null ) {
         xml.append( XMLHandler.addTagValue( "login", repository.getUserInfo().getLogin() ) );
-        xml.append( XMLHandler.addTagValue( "password", Encr.encryptPassword( repository
-          .getUserInfo().getPassword() ) ) );
+        xml.append( XMLHandler.addTagValue( "password", repository.getUserInfo().getPassword() ) );
       }
       xml.append( XMLHandler.closeTag( "repository" ) );
     }

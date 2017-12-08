@@ -24,6 +24,7 @@ package org.pentaho.di.repository.kdr.delegates;
 
 import org.pentaho.di.core.RowMetaAndData;
 import org.pentaho.di.core.encryption.Encr;
+import org.pentaho.di.core.encryption.KettleTwoWayPasswordEncoder;
 import org.pentaho.di.core.exception.KettleAuthException;
 import org.pentaho.di.core.exception.KettleDatabaseException;
 import org.pentaho.di.core.exception.KettleException;
@@ -103,7 +104,8 @@ public class KettleDatabaseRepositoryUserDelegate extends KettleDatabaseReposito
     // decrypt password if needed and compare with the one
     String userPass = Encr.decryptPasswordOptionallyEncrypted( passwd );
 
-    if ( userInfo.getObjectId() == null || !userInfo.getPassword().equals( userPass ) ) {
+    if ( userInfo.getObjectId() == null || !Encr.decryptPasswordOptionallyEncrypted(
+      userInfo.getPassword() ).equals( userPass ) ) {
       throw new KettleAuthException( BaseMessages.getString( PKG, "UserInfo.Error.IncorrectPasswortLogin" ) );
     }
     return userInfo;
@@ -139,8 +141,7 @@ public class KettleDatabaseRepositoryUserDelegate extends KettleDatabaseReposito
     RowMetaAndData r = new RowMetaAndData();
     r.addValue( new ValueMetaInteger( "ID_USER" ), userInfo.getObjectId() );
     r.addValue( new ValueMetaString( "LOGIN" ), userInfo.getLogin() );
-    r.addValue( new ValueMetaString( "PASSWORD" ), Encr.encryptPassword( userInfo
-      .getPassword() ) );
+    r.addValue( new ValueMetaString( "PASSWORD" ), userInfo.getPassword() );
     r.addValue( new ValueMetaString( "NAME" ), userInfo.getUsername() );
     r.addValue( new ValueMetaString( "DESCRIPTION" ), userInfo.getDescription() );
     r.addValue( new ValueMetaBoolean( "ENABLED" ), Boolean.valueOf( userInfo.isEnabled() ) );

@@ -16,14 +16,15 @@
  */
 package org.pentaho.di.repository.pur;
 
-import java.util.List;
-
 import org.apache.commons.logging.Log;
+import org.pentaho.di.core.encryption.Encr;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.i18n.BaseMessages;
 import org.pentaho.di.repository.IUser;
 import org.pentaho.platform.api.engine.security.userroledao.UserRoleInfo;
 import org.pentaho.platform.security.userrole.ws.IUserRoleListWebService;
+
+import java.util.List;
 
 public class UserRoleListDelegate implements java.io.Serializable {
 
@@ -41,7 +42,8 @@ public class UserRoleListDelegate implements java.io.Serializable {
     try {
       this.logger = logger;
       userDetailsRoleListWebService =
-          serviceManager.createService( userInfo.getLogin(), userInfo.getPassword(), IUserRoleListWebService.class );
+          serviceManager.createService( userInfo.getLogin(),
+            Encr.decryptPasswordOptionallyEncrypted( userInfo.getPassword() ), IUserRoleListWebService.class );
       updateUserRoleList();
     } catch ( Exception e ) {
       this.logger.error( BaseMessages

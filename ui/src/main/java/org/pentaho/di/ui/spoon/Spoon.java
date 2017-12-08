@@ -4425,7 +4425,7 @@ public class Spoon extends ApplicationWindow implements AddUndoPositionInterface
               "kitchen "
                 + "/rep:\"" + rep.getName() + "\"" + " /user:\""
                 + ( rep.getUserInfo() != null ? rep.getUserInfo().getLogin() : "" ) + "\"" + " /pass:\""
-                + Encr.encryptPasswordIfNotUsingVariables( rep.getUserInfo().getPassword() ) + "\""
+                + rep.getUserInfo().getPassword() + "\""
                 + " /job:\"" + jobMeta.getName() + '"' + " /dir:\""
                 + jobMeta.getRepositoryDirectory().getPath() + "\"" + " /level:Basic";
           } else {
@@ -4438,8 +4438,8 @@ public class Spoon extends ApplicationWindow implements AddUndoPositionInterface
                 + ( rep.getUserInfo() != null ? rep.getUserInfo().getLogin() : "" )
                 + "'"
                 + " -pass='"
-                + Encr.encryptPasswordIfNotUsingVariables( rep.getUserInfo() != null ? rep
-                  .getUserInfo().getPassword() : "" ) + "'" + " -job='" + jobMeta.getName() + "'"
+                + rep.getUserInfo() != null ? rep
+                  .getUserInfo().getPassword() : "" + "'" + " -job='" + jobMeta.getName() + "'"
                 + " -dir='" + jobMeta.getRepositoryDirectory().getPath() + "'" + " -level=Basic";
           }
         }

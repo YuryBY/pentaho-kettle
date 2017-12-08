@@ -16,10 +16,7 @@
  */
 package org.pentaho.di.repository.pur;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import org.pentaho.di.core.encryption.Encr;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.i18n.BaseMessages;
 import org.pentaho.di.repository.IUser;
@@ -29,6 +26,10 @@ import org.pentaho.di.repository.pur.model.IRole;
 import org.pentaho.di.ui.repository.pur.services.IAbsSecurityManager;
 import org.pentaho.platform.security.policy.rolebased.RoleBindingStruct;
 import org.pentaho.platform.security.policy.rolebased.ws.IRoleAuthorizationPolicyRoleBindingDaoWebService;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class AbsSecurityManager extends PurRepositorySecurityManager implements IAbsSecurityManager,
     java.io.Serializable {
@@ -44,7 +45,8 @@ public class AbsSecurityManager extends PurRepositorySecurityManager implements 
     super( repository, repositoryMeta, userInfo, serviceManager );
     try {
       authorizationPolicyRoleBindingService =
-          serviceManager.createService( userInfo.getLogin(), userInfo.getPassword(),
+          serviceManager.createService( userInfo.getLogin(),
+            Encr.decryptPasswordOptionallyEncrypted( userInfo.getPassword() ),
               IRoleAuthorizationPolicyRoleBindingDaoWebService.class );
       if ( authorizationPolicyRoleBindingService == null ) {
         getLogger().error(

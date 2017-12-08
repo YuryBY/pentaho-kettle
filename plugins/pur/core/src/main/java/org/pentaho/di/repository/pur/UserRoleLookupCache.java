@@ -16,11 +16,8 @@
  */
 package org.pentaho.di.repository.pur;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
+import org.pentaho.di.core.encryption.Encr;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.repository.IUser;
 import org.pentaho.di.repository.pur.model.IEEUser;
@@ -30,6 +27,10 @@ import org.pentaho.platform.api.engine.security.userroledao.UserRoleInfo;
 import org.pentaho.platform.security.userroledao.ws.ProxyPentahoRole;
 import org.pentaho.platform.security.userroledao.ws.ProxyPentahoUser;
 import org.pentaho.platform.security.userroledao.ws.UserRoleSecurityInfo;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class UserRoleLookupCache implements java.io.Serializable {
 
@@ -101,7 +102,7 @@ public class UserRoleLookupCache implements java.io.Serializable {
     }
     userInfoToUpdate.setDescription( user.getDescription() );
     if ( !StringUtils.isEmpty( user.getPassword() ) ) {
-      userInfoToUpdate.setPassword( user.getPassword() );
+      userInfoToUpdate.setPassword( Encr.decryptPasswordOptionallyEncrypted( user.getPassword() ) );
     }
     if ( user instanceof IEEUser ) {
       ( (IEEUser) userInfoToUpdate ).setRoles( ( (IEEUser) user ).getRoles() );

@@ -22,16 +22,7 @@
 
 package org.pentaho.di.www.jaxrs;
 
-import java.util.UUID;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
+import org.pentaho.di.core.encryption.Encr;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.core.logging.KettleLogStore;
 import org.pentaho.di.core.logging.LoggingObjectType;
@@ -45,6 +36,15 @@ import org.pentaho.di.job.JobMeta;
 import org.pentaho.di.repository.Repository;
 import org.pentaho.di.www.CarteObjectEntry;
 import org.pentaho.di.www.CarteSingleton;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.UUID;
 
 @Path( "/carte/job" )
 public class JobResource {
@@ -102,7 +102,8 @@ public class JobResource {
         //
         if ( job.getRep() != null && !job.getRep().isConnected() ) {
           if ( job.getRep().getUserInfo() != null ) {
-            job.getRep().connect( job.getRep().getUserInfo().getLogin(), job.getRep().getUserInfo().getPassword() );
+            job.getRep().connect( job.getRep().getUserInfo().getLogin(),
+              Encr.decryptPasswordOptionallyEncrypted( job.getRep().getUserInfo().getPassword() ) );
           } else {
             job.getRep().connect( null, null );
           }

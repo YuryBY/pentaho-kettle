@@ -16,14 +16,15 @@
  */
 package org.pentaho.di.repository.pur;
 
-import java.util.List;
-
+import org.pentaho.di.core.encryption.Encr;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.i18n.BaseMessages;
 import org.pentaho.di.repository.IUser;
 import org.pentaho.di.repository.RepositoryOperation;
 import org.pentaho.di.ui.repository.pur.services.IAbsSecurityProvider;
 import org.pentaho.platform.security.policy.rolebased.ws.IAuthorizationPolicyWebService;
+
+import java.util.List;
 
 public class AbsSecurityProvider extends PurRepositorySecurityProvider implements IAbsSecurityProvider,
     java.io.Serializable {
@@ -52,7 +53,8 @@ public class AbsSecurityProvider extends PurRepositorySecurityProvider implement
     super( repository, repositoryMeta, userInfo, serviceManager );
     try {
       authorizationPolicyWebService =
-          serviceManager.createService( userInfo.getLogin(), userInfo.getPassword(),
+          serviceManager.createService( userInfo.getLogin(),
+            Encr.decryptPasswordOptionallyEncrypted( userInfo.getPassword() ),
               IAuthorizationPolicyWebService.class );
       if ( authorizationPolicyWebService == null ) {
         getLogger().error(

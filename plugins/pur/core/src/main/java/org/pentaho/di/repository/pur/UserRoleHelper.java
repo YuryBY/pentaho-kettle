@@ -16,13 +16,8 @@
  */
 package org.pentaho.di.repository.pur;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
+import org.pentaho.di.core.encryption.Encr;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.repository.IUser;
 import org.pentaho.di.repository.pur.model.IEEUser;
@@ -35,6 +30,12 @@ import org.pentaho.platform.security.userroledao.ws.ProxyPentahoUser;
 import org.pentaho.platform.security.userroledao.ws.UserRoleException;
 import org.pentaho.platform.security.userroledao.ws.UserRoleSecurityInfo;
 import org.pentaho.platform.security.userroledao.ws.UserToRoleAssignment;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class UserRoleHelper implements java.io.Serializable {
 
@@ -149,7 +150,7 @@ public class UserRoleHelper implements java.io.Serializable {
     user.setName( userInfo.getLogin() );
     // Since we send the empty password to the client, if the client has not modified the password then we do change it
     if ( !StringUtils.isEmpty( userInfo.getPassword() ) ) {
-      user.setPassword( userInfo.getPassword() );
+      user.setPassword( Encr.decryptPasswordOptionallyEncrypted( userInfo.getPassword() ) );
     }
     user.setDescription( userInfo.getDescription() );
     return user;

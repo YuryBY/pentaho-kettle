@@ -22,6 +22,8 @@ import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import org.apache.commons.logging.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.pentaho.di.core.encryption.Encr;
+import org.pentaho.di.core.encryption.KettleTwoWayPasswordEncoder;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.i18n.BaseMessages;
 import org.pentaho.di.repository.IUser;
@@ -67,7 +69,7 @@ public class UserRoleDelegate implements java.io.Serializable {
     this.logger = logger;
 
     String login = userInfo.getLogin();
-    String password = userInfo.getPassword();
+    String password = Encr.decryptPasswordOptionallyEncrypted( userInfo.getPassword() );
     try {
       this.userDetailsRoleListWebService =
           serviceManager.createService( login, password, IUserRoleListWebService.class );
@@ -92,7 +94,8 @@ public class UserRoleDelegate implements java.io.Serializable {
   private void initManaged( PurRepositoryMeta repositoryMeta, IUser userInfo ) throws JSONException {
     String baseUrl = repositoryMeta.getRepositoryLocation().getUrl();
     String webService = baseUrl + ( baseUrl.endsWith( "/" ) ? "" : "/" ) + "api/system/authentication-provider";
-    HTTPBasicAuthFilter authFilter = new HTTPBasicAuthFilter( userInfo.getLogin(), userInfo.getPassword() );
+    HTTPBasicAuthFilter authFilter = new HTTPBasicAuthFilter( userInfo.getLogin(),
+      new KettleTwoWayPasswordEncoder().decode( userInfo.getPassword() ) );
     Client client = new Client();
     client.addFilter( authFilter );
     WebResource resource = client.resource( webService );

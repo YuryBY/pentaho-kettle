@@ -19,6 +19,7 @@ package org.pentaho.di.repository.pur;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.pentaho.di.core.encryption.Encr;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.repository.IUser;
 import org.pentaho.di.repository.UserInfo;
@@ -68,7 +69,7 @@ public class UserRoleHelperTest {
     assertNotNull( user );
     assertEquals( pentahoUser.getName(), user.getName() );
     assertEquals( pentahoUser.getName(), user.getLogin() );
-    assertEquals( pentahoUser.getPassword(), user.getPassword() );
+    assertEquals( pentahoUser.getPassword(), Encr.decryptPasswordOptionallyEncrypted( user.getPassword() ) );
     assertEquals( pentahoUser.getDescription(), user.getDescription() );
     assertEquals( pentahoUser.getEnabled(), user.isEnabled() );
   }

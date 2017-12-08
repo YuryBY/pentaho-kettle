@@ -27,6 +27,8 @@ package org.pentaho.di.repository;
  *
  */
 
+import org.pentaho.di.core.encryption.Encr;
+
 public class UserInfo implements IUser {
   // private static Class<?> PKG = UserInfo.class; // for i18n purposes,
   // needed by Translator2!!
@@ -92,7 +94,7 @@ public class UserInfo implements IUser {
   }
 
   public String getPassword() {
-    return password;
+    return Encr.encryptPasswordIfNotUsingVariables( password );
   }
 
   public void setUsername( String username ) {
